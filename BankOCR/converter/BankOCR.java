@@ -4,6 +4,7 @@ import java.io.*;
 
 public class BankOCR{
 	public static void main(String args[]){
+		
 		ArrayList<ArrayList<String>> inputList = readInputFile();
 		ArrayList<ArrayList<Integer>> finalList = new ArrayList<ArrayList<Integer>>();
 		DigitalNumber number = new DigitalNumber();
@@ -12,8 +13,11 @@ public class BankOCR{
 			finalList.add(number.getTranslation(line));
 		}
 		
-		for(ArrayList<Integer> reading:finalList){
-			printOCR(reading);
+		for(ArrayList<Integer> out:finalList){
+			for(String printOut:generatePrintOCR(out)){
+				System.out.print(printOut);
+			}
+			System.out.println();
 		}
 	}
 	
@@ -54,12 +58,13 @@ public class BankOCR{
 	}
 	
 	/**
-	 * Appends either "ERR" if number does not pass checksum, or "ILL" if number is not valid and prints each number in read input. Replaces all incorrect
-	 * numbers with a "?" character.
+	 * Appends either "ERR" if number does not pass checksum, OR "ILL" if number is not valid and returns an ArrayList<String for each number in read input. Replaces all unreadable
+	 * numbers with a "?" character
 	 * 
-	 * @param inList The list to be printed out.
+	 * @param inList The list to be printed out
+	 * @return ArrayList<String> The generated list ready for printing
 	 */
-	public static void printOCR(ArrayList<Integer> inList){
+	public static ArrayList<String> generatePrintOCR(ArrayList<Integer> inList){
 		ArrayList<String> convertedList = new ArrayList<String>();
 		DigitalNumber number = new DigitalNumber();
 		
@@ -71,15 +76,15 @@ public class BankOCR{
 				convertedList.add(num.toString());
 			}
 		}
-		if(number.verifyAccountNumberChecksum(inList) == -1){
-			convertedList.add("ERR");
+		if(number.verifyAccountNumberReading(inList) == -1){
+			convertedList.add(" ILL");
+			return convertedList;
 		}
-		else if(number.verifyAccountNumberReading(inList) == -1){
-			convertedList.add("ILL");
+		if(number.verifyAccountNumberChecksum(inList) == -1){
+			convertedList.add(" ERR");
+			return convertedList;
 		}
 		
-		for(String out:convertedList){
-			System.out.println(out);
-		}
+		return convertedList;
 	}
 }

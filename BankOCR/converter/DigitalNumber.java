@@ -4,7 +4,7 @@ import java.util.*;
 public class DigitalNumber{
 	private static int Rows = 3;
 	private static int TotalNumbers = 9;
-	private ArrayList<String> MatchList = null;
+	public static ArrayList<String> MatchList = null;
 	
 	public DigitalNumber(){
 		MatchList = new ArrayList<String>();
@@ -30,8 +30,8 @@ public class DigitalNumber{
 		ArrayList<Integer> translateList = new ArrayList<Integer>();
 		
 		for(int i=0;i<TotalNumbers;i++){
-			if(translateNumbers(inputList, i) != -1){
-				translateList.add(translateNumbers(inputList, -1));
+			if(translateNumbers(inputList, i) == -1){
+				translateList.add(-1);
 			}
 			else{
 				translateList.add(translateNumbers(inputList, i));
@@ -75,7 +75,7 @@ public class DigitalNumber{
 	 * @return 0 if account number is valid, -1 otherwise
 	 */
 	public int verifyAccountNumberChecksum(ArrayList<Integer> inputList){
-		Integer sum = inputList.get(inputList.size()-1) + inputList.get(inputList.size()-2);
+		double sum = inputList.get(inputList.size()-1) + inputList.get(inputList.size()-2);
 		for(int i=inputList.size()-2;i>0;i--){
 			sum = sum * (inputList.get(i-1) + inputList.get(i));
 		}
@@ -85,6 +85,12 @@ public class DigitalNumber{
 		return -1;
 	}
 	
+	/**
+	 * Searches list for -1 int values and returns -1 if found (true) or 0 if not found (false). Represents bad character reading.
+	 * 
+	 * @param inputList List to be checked for bad characters
+	 * @return int -1 if bad character found, 0 all characters are valid
+	 */
 	public int verifyAccountNumberReading(ArrayList<Integer> inputList){
 		for(Integer num: inputList){
 			if(num == -1){
